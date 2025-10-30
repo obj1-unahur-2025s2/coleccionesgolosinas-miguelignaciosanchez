@@ -1,0 +1,165 @@
+import golosinas.*
+
+describe "Tests de Golosinas con assert" {
+
+    // --- Bombón ---
+    test "Bombon" {
+        const bombon = new Bombon()
+        assert.equals(bombon.peso(), 15)
+        assert.equals(bombon.precio(), 5)
+        assert.equals(bombon.sabor(), "frutilla")
+        assert.that(bombon.libreGluten())
+
+        bombon.mordisco()
+        assert.equals(bombon.peso(), 11) // (15*0.8)-1 = 11
+        bombon.mordisco()
+        assert.equals(bombon.peso(), 7) // (11*0.8)-1 = 7.8 → 7
+    }
+
+    // --- Alfajor ---
+    test "Alfajor" {
+        const alfajor = new Alfajor()
+        assert.equals(alfajor.peso(), 300)
+        assert.equals(alfajor.precio(), 12)
+        assert.equals(alfajor.sabor(), "chocolate")
+        assert.notThat(alfajor.libreGluten())
+
+        alfajor.mordisco()
+        assert.equals(alfajor.peso(), 240)
+        alfajor.mordisco()
+        assert.equals(alfajor.peso(), 192)
+    }
+
+    // --- Caramelo ---
+    test "Caramelo" {
+        const caramelo = new Caramelo()
+        assert.equals(caramelo.peso(), 5)
+        assert.equals(caramelo.precio(), 1)
+        assert.equals(caramelo.sabor(), "frutilla")
+        assert.that(caramelo.libreGluten())
+
+        caramelo.mordisco()
+        assert.equals(caramelo.peso(), 4)
+        caramelo.mordisco()
+        assert.equals(caramelo.peso(), 3)
+    }
+
+    // --- Chupetín ---
+    test "Chupetin" {
+        const chupetin = new Chupetin()
+        assert.equals(chupetin.peso(), 7)
+        assert.equals(chupetin.precio(), 2)
+        assert.equals(chupetin.sabor(), "naranja")
+        assert.that(chupetin.libreGluten())
+
+        chupetin.mordisco()
+        assert.equals(chupetin.peso(), 6.3)
+        chupetin.mordisco()
+        assert.equals(chupetin.peso(), 5.67)
+    }
+
+    // --- Oblea ---
+    test "Oblea" {
+        const oblea = new Oblea()
+        assert.equals(oblea.peso(), 250)
+        assert.equals(oblea.precio(), 5)
+        assert.equals(oblea.sabor(), "vainilla")
+        assert.notThat(oblea.libreGluten())
+
+        oblea.mordisco()
+        assert.equals(oblea.peso(), 125)
+        oblea.mordisco()
+        assert.equals(oblea.peso(), 93.75) // 125*0.75
+        oblea.mordisco()
+        assert.equals(oblea.peso(), 70.3125) // 93.75*0.75
+    }
+
+    // --- Chocolatín 40g ---
+    test "Chocolatin 40g" {
+        const choco40 = new Chocolatin(40)
+        assert.equals(choco40.peso(), 40)
+        assert.equals(choco40.precio(), 20)
+        assert.equals(choco40.sabor(), "chocolate")
+        assert.notThat(choco40.libreGluten())
+
+        choco40.mordisco()
+        assert.equals(choco40.peso(), 38)
+        choco40.mordisco()
+        assert.equals(choco40.peso(), 36)
+    }
+
+    // --- Chocolatín 100g ---
+    test "Chocolatin 100g" {
+        const choco100 = new Chocolatin(100)
+        assert.equals(choco100.peso(), 100)
+        assert.equals(choco100.precio(), 50)
+        assert.equals(choco100.sabor(), "chocolate")
+        assert.notThat(choco100.libreGluten())
+
+        choco100.mordisco()
+        assert.equals(choco100.peso(), 98)
+        choco100.mordisco()
+        assert.equals(choco100.peso(), 96)
+    }
+
+    // --- Pastilla Tutti-Frutti sin gluten ---
+    test "Pastilla sin TACC" {
+        const pastilla = new PastillaTuttiFrutti(true)
+        assert.equals(pastilla.peso(), 5)
+        assert.equals(pastilla.precio(), 7)
+        assert.equals(pastilla.sabor(), "frutilla")
+        assert.that(pastilla.libreGluten())
+
+        pastilla.mordisco()
+        assert.equals(pastilla.sabor(), "chocolate")
+        pastilla.mordisco()
+        assert.equals(pastilla.sabor(), "naranja")
+    }
+
+    // --- Pastilla Tutti-Frutti con gluten ---
+    test "Pastilla con TACC" {
+        const pastilla = new PastillaTuttiFrutti(false)
+        assert.equals(pastilla.peso(), 5)
+        assert.equals(pastilla.precio(), 10)
+        assert.equals(pastilla.sabor(), "frutilla")
+        assert.notThat(pastilla.libreGluten())
+
+        pastilla.mordisco()
+        assert.equals(pastilla.sabor(), "chocolate")
+        pastilla.mordisco()
+        assert.equals(pastilla.sabor(), "naranja")
+    }
+
+    // --- Golosina Bañada sobre Pastilla Tutti-Frutti ---
+    test "Golosina bañada con pastilla" {
+        const pastilla = new PastillaTuttiFrutti(true)
+        const bañada = new GolosinaBañada(pastilla)
+        assert.equals(bañada.peso(), pastilla.peso() + 4)
+        assert.equals(bañada.sabor(), pastilla.sabor())
+        assert.that(bañada.libreGluten() == pastilla.libreGluten())
+
+        bañada.mordisco()
+        bañada.mordisco()
+        assert.equals(bañada.peso(), pastilla.peso()) // baño consumido
+    }
+
+    // --- Golosina Bañada sobre Chocolatín ---
+    test "Golosina bañada con chocolatín" {
+        const choco = new Chocolatin(40)
+        const bañada = new GolosinaBañada(choco)
+        assert.equals(bañada.peso(), choco.peso() + 4)
+        bañada.mordisco()
+        bañada.mordisco()
+        assert.equals(bañada.peso(), choco.peso()) // baño consumido
+    }
+
+    // --- Golosina Bañada sobre Chupetín ---
+    test "Golosina bañada con chupetín" {
+        const chupetin = new Chupetin()
+        const bañada = new GolosinaBañada(chupetin)
+        assert.equals(bañada.peso(), chupetin.peso() + 4)
+        bañada.mordisco()
+        bañada.mordisco()
+        assert.equals(bañada.peso(), chupetin.peso()) // baño consumido
+    }
+}

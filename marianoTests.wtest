@@ -1,0 +1,62 @@
+import mariano.*
+describe "Tests de Mariano" {
+
+    test "Compra de golosinas y métodos" {
+        const choco = new Chocolatin(40)
+        const caramelo = new Caramelo()
+        const bombon = new Bombon()
+        // Compra de golosinas
+        mariano.comprar(choco)
+        mariano.comprar(caramelo)
+        mariano.comprar(bombon)
+        // cantidadDeGolosinas
+        assert.equals(mariano.cantidadDeGolosinas(), 3)
+        // tieneLaGolosina
+        assert.that(mariano.tieneLaGolosina(choco))
+        assert.notThat(mariano.tieneLaGolosina(new Alfajor()))
+        // probarGolosinas (cada una recibe un mordisco)
+        mariano.probarGolosinas()
+        assert.equals(choco.peso(), 38)
+        assert.equals(caramelo.peso(), 4)
+        assert.equals(bombon.peso(), 11)
+        // hayGolosinaSinTACC
+        assert.that(mariano.hayGolosinaSinTACC()) // choco y bombon son sin TACC
+        // preciosCuidados
+        assert.notThat(mariano.preciosCuidados()) // choco vale 20 > 10
+        // golosinaDeSabor
+        assert.equals(mariano.golosinaDeSabor("frutilla"), bombon)
+        assert.equals(mariano.golosinaDeSabor("chocolate"), choco)
+        // golosinasDeSabor
+        const frutillas = mariano.golosinasDeSabor("frutilla")
+        assert.equals(frutillas.size(), 2) // bombon y caramelo
+        // sabores
+        const sabores = mariano.sabores()
+        assert.that(sabores.contains("frutilla"))
+        assert.that(sabores.contains("chocolate"))
+        assert.notThat(sabores.contains("naranja"))
+        // golosinaMasCara
+        assert.equals(mariano.golosinaMasCara(), choco)
+        // pesoGolosinas
+        assert.equals(mariano.pesoGolosinas(), 38 + 4 + 11) // 53
+        // golosinasFaltantes
+        const deseadas = #{
+            new Alfajor(),
+            bombon,
+            choco,
+            new Chupetin()
+        }
+        const faltantes = mariano.golosinasFaltantes(deseadas)
+        assert.equals(faltantes.size(), 2)
+        // Debe faltar Alfajor y Chupetín
+        assert.that(faltantes.contains(new Alfajor()))
+        assert.that(faltantes.contains(new Chupetin()))
+        // gustosFaltantes
+        const gustosDeseados = #{"melón", "chocolate", "frutilla", "vainilla"}
+        const gustosFalt = mariano.gustosFaltantes(gustosDeseados)
+        assert.equals(gustosFalt.size(), 2)
+        // Deben faltar "melón" y "vainilla"
+        assert.that(gustosFalt.contains("melón"))
+        assert.that(gustosFalt.contains("vainilla"))
+    }
+
+}
